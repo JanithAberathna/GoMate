@@ -4,16 +4,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
   Alert,
   Switch,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logoutUser } from '@/store/slices/authSlice';
 import { toggleTheme } from '@/store/slices/themeSlice';
+import { SwissColors } from '@/constants/theme';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Feather name="map-pin" size={24} color="#007AFF" />
+            <Feather name="map-pin" size={24} color={SwissColors.swissRed} />
             <Text style={styles.statValue}>0</Text>
             <Text style={styles.statLabel}>Visited</Text>
           </View>
@@ -91,7 +92,7 @@ export default function ProfileScreen() {
             <Switch
               value={isDarkMode}
               onValueChange={handleToggleDarkMode}
-              trackColor={{ false: '#ddd', true: '#007AFF' }}
+              trackColor={{ false: '#ddd', true: SwissColors.swissRed }}
               thumbColor="#fff"
             />
           </View>
@@ -156,48 +157,68 @@ const getStyles = (isDarkMode: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: isDarkMode ? '#000' : '#f5f5f5',
+      backgroundColor: isDarkMode ? '#000' : SwissColors.swissWhite,
     },
     scrollContent: {
       paddingBottom: 40,
     },
     header: {
       alignItems: 'center',
-      paddingVertical: 32,
+      paddingVertical: 40,
+      paddingHorizontal: 20,
       backgroundColor: isDarkMode ? '#000' : '#fff',
-      borderBottomWidth: 1,
-      borderBottomColor: isDarkMode ? '#222' : '#e5e5e5',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDarkMode ? 0 : 0.05,
+      shadowRadius: 8,
+      elevation: 2,
     },
     avatarContainer: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      backgroundColor: isDarkMode ? '#222' : '#f0f0f0',
+      width: 110,
+      height: 110,
+      borderRadius: 55,
+      backgroundColor: SwissColors.swissRed + '20',
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 16,
+      marginBottom: 20,
+      borderWidth: 4,
+      borderColor: isDarkMode ? '#1C1C1C' : SwissColors.swissWhite,
+      shadowColor: SwissColors.swissRed,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      elevation: 6,
     },
     name: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: isDarkMode ? '#fff' : '#000',
-      marginBottom: 4,
+      fontSize: 28,
+      fontWeight: '800',
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
+      marginBottom: 6,
+      letterSpacing: -0.5,
     },
     username: {
-      fontSize: 16,
-      color: '#007AFF',
-      marginBottom: 4,
+      fontSize: 17,
+      color: SwissColors.swissRed,
+      marginBottom: 6,
+      fontWeight: '600',
     },
     email: {
       fontSize: 14,
-      color: isDarkMode ? '#888' : '#666',
+      color: isDarkMode ? '#888' : SwissColors.textSecondary,
     },
     statsContainer: {
       flexDirection: 'row',
-      backgroundColor: isDarkMode ? '#000' : '#fff',
-      paddingVertical: 24,
+      backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
+      paddingVertical: 28,
       paddingHorizontal: 20,
-      marginTop: 1,
+      marginHorizontal: 20,
+      marginTop: 16,
+      borderRadius: 20,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: isDarkMode ? 0 : 0.08,
+      shadowRadius: 12,
+      elevation: 4,
     },
     statItem: {
       flex: 1,
@@ -205,40 +226,49 @@ const getStyles = (isDarkMode: boolean) =>
     },
     statDivider: {
       width: 1,
-      backgroundColor: isDarkMode ? '#222' : '#e5e5e5',
+      backgroundColor: isDarkMode ? '#333' : SwissColors.steelGray + '30',
     },
     statValue: {
       fontSize: 20,
       fontWeight: 'bold',
-      color: isDarkMode ? '#fff' : '#000',
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
       marginTop: 8,
     },
     statLabel: {
       fontSize: 12,
-      color: isDarkMode ? '#888' : '#666',
+      color: isDarkMode ? '#888' : SwissColors.textSecondary,
       marginTop: 4,
     },
     section: {
       marginTop: 24,
-      backgroundColor: isDarkMode ? '#000' : '#fff',
-      paddingVertical: 8,
+      marginHorizontal: 20,
+      backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
+      borderRadius: 20,
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: isDarkMode ? 0 : 0.08,
+      shadowRadius: 12,
+      elevation: 4,
     },
     sectionTitle: {
-      fontSize: 14,
-      fontWeight: '600',
-      color: isDarkMode ? '#888' : '#666',
+      fontSize: 13,
+      fontWeight: '700',
+      color: isDarkMode ? '#888' : SwissColors.textSecondary,
       paddingHorizontal: 20,
-      paddingVertical: 8,
+      paddingTop: 16,
+      paddingBottom: 12,
       textTransform: 'uppercase',
+      letterSpacing: 1,
     },
     menuItem: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 20,
-      paddingVertical: 16,
+      paddingVertical: 18,
       borderBottomWidth: 1,
-      borderBottomColor: isDarkMode ? '#222' : '#f0f0f0',
+      borderBottomColor: isDarkMode ? '#333' : SwissColors.steelGray + '20',
     },
     menuItemLeft: {
       flexDirection: 'row',
@@ -253,19 +283,19 @@ const getStyles = (isDarkMode: boolean) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 8,
-      backgroundColor: isDarkMode ? '#1a0000' : '#fff5f5',
+      gap: 10,
+      backgroundColor: 'transparent',
       marginHorizontal: 20,
       marginTop: 32,
-      paddingVertical: 16,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: '#ff3b30',
+      paddingVertical: 18,
+      borderRadius: 16,
+      borderWidth: 2,
+      borderColor: SwissColors.swissRed,
     },
     logoutText: {
       fontSize: 16,
       fontWeight: '600',
-      color: '#ff3b30',
+      color: SwissColors.swissRed,
     },
     version: {
       textAlign: 'center',
