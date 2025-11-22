@@ -48,7 +48,7 @@ export default function DestinationDetailsScreen() {
   if (loading || !selectedDestination) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={SwissColors.swissRed} />
       </View>
     );
   }
@@ -84,7 +84,7 @@ export default function DestinationDetailsScreen() {
             <Text style={styles.title}>{selectedDestination.name}</Text>
             {selectedDestination.transportType && (
               <View style={styles.transportBadge}>
-                <Feather name="navigation" size={16} color="#007AFF" />
+                <Feather name="navigation" size={16} color={SwissColors.swissRed} />
                 <Text style={styles.transportText}>{selectedDestination.transportType}</Text>
               </View>
             )}
@@ -98,7 +98,7 @@ export default function DestinationDetailsScreen() {
           {selectedDestination.schedule && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Feather name="clock" size={20} color="#007AFF" />
+                <Feather name="clock" size={20} color={SwissColors.swissRed} />
                 <Text style={styles.sectionTitle}>Schedule</Text>
               </View>
               <View style={styles.scheduleGrid}>
@@ -113,7 +113,7 @@ export default function DestinationDetailsScreen() {
 
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Feather name="info" size={20} color="#007AFF" />
+              <Feather name="info" size={20} color={SwissColors.swissRed} />
               <Text style={styles.sectionTitle}>About This Hub</Text>
             </View>
             <Text style={styles.description}>{selectedDestination.description}</Text>
@@ -122,7 +122,7 @@ export default function DestinationDetailsScreen() {
           {selectedDestination.price && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Feather name="dollar-sign" size={20} color="#007AFF" />
+                <Feather name="dollar-sign" size={20} color={SwissColors.swissRed} />
                 <Text style={styles.sectionTitle}>Ticket Price</Text>
               </View>
               <Text style={styles.priceText}>${selectedDestination.price.toFixed(2)}</Text>
@@ -131,7 +131,7 @@ export default function DestinationDetailsScreen() {
 
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Feather name="list" size={20} color="#007AFF" />
+              <Feather name="list" size={20} color={SwissColors.swissRed} />
               <Text style={styles.sectionTitle}>Facilities</Text>
             </View>
             <View style={styles.featuresList}>
@@ -263,7 +263,7 @@ const getStyles = (isDarkMode: boolean) =>
     },
     transportText: {
       fontSize: SCREEN_WIDTH * 0.035,
-      color: '#007AFF',
+      color: SwissColors.swissRed,
       fontWeight: '600',
     },
     locationContainer: {
@@ -329,7 +329,7 @@ const getStyles = (isDarkMode: boolean) =>
     priceText: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: '#007AFF',
+      color: SwissColors.swissRed,
     },
     featuresList: {
       gap: 12,
@@ -365,7 +365,7 @@ const getStyles = (isDarkMode: boolean) =>
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
-      backgroundColor: '#007AFF',
+      backgroundColor: SwissColors.swissRed,
       paddingHorizontal: 24,
       paddingVertical: 14,
       borderRadius: 12,
