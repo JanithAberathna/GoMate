@@ -20,6 +20,7 @@ import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { loginUser, clearError } from '@/store/slices/authSlice';
 import { router } from 'expo-router';
+import { SwissColors } from '@/constants/theme';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
@@ -65,9 +66,9 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Feather name="map-pin" size={60} color="#007AFF" />
+          <Feather name="map-pin" size={60} color={SwissColors.swissRed} />
           <Text style={styles.title}>GoMate</Text>
-          <Text style={styles.subtitle}>Your Travel Companion</Text>
+          <Text style={styles.subtitle}>Swiss Travel Companion</Text>
         </View>
 
         <Formik
@@ -216,7 +217,7 @@ const getStyles = (isDarkMode: boolean) =>
       marginLeft: 4,
     },
     button: {
-      backgroundColor: '#007AFF',
+      backgroundColor: SwissColors.swissRed,
       height: 50,
       borderRadius: 12,
       justifyContent: 'center',
@@ -248,14 +249,14 @@ const getStyles = (isDarkMode: boolean) =>
     },
     secondaryButton: {
       borderWidth: 1,
-      borderColor: '#007AFF',
+      borderColor: SwissColors.swissRed,
       height: 50,
       borderRadius: 12,
       justifyContent: 'center',
       alignItems: 'center',
     },
     secondaryButtonText: {
-      color: '#007AFF',
+      color: SwissColors.swissRed,
       fontSize: 16,
       fontWeight: '600',
     },
