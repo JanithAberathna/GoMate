@@ -60,32 +60,40 @@ export default function HomeScreen() {
     <TouchableOpacity
       style={[styles.card, isDarkMode && styles.cardDark]}
       onPress={() => router.push(`/details/${item.id}`)}
-      activeOpacity={0.7}
+      activeOpacity={0.9}
     >
-      <Image source={{ uri: item.image }} style={styles.cardImage} />
-      <TouchableOpacity
-        style={styles.favoriteButton}
-        onPress={() => handleToggleFavorite(item)}
-      >
-        <Feather
-          name={isFavorite(item.id) ? 'heart' : 'heart'}
-          size={24}
-          color={isFavorite(item.id) ? '#ff3b30' : '#fff'}
-          style={isFavorite(item.id) ? styles.heartFilled : styles.heartOutline}
-        />
-      </TouchableOpacity>
+      <View style={styles.cardImageContainer}>
+        <Image source={{ uri: item.image }} style={styles.cardImage} />
+        <View style={styles.imageOverlay} />
+        <TouchableOpacity
+          style={styles.favoriteButton}
+          onPress={() => handleToggleFavorite(item)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.favoriteButtonInner}>
+            <Feather
+              name="heart"
+              size={20}
+              color={isFavorite(item.id) ? SwissColors.swissRed : '#666'}
+              fill={isFavorite(item.id) ? SwissColors.swissRed : 'transparent'}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
       
       <View style={styles.cardContent}>
         <View style={styles.cardHeader}>
-          <Text style={[styles.cardTitle, isDarkMode && styles.textDark]} numberOfLines={1}>
-            {item.name}
-          </Text>
-          {item.transportType && (
-            <View style={styles.transportBadge}>
-              <Feather name="navigation" size={12} color="#007AFF" />
-              <Text style={styles.transportText}>{item.transportType}</Text>
-            </View>
-          )}
+          <View style={styles.titleContainer}>
+            <Text style={[styles.cardTitle, isDarkMode && styles.textDark]} numberOfLines={1}>
+              {item.name}
+            </Text>
+            {item.transportType && (
+              <View style={styles.transportBadge}>
+                <Feather name="navigation" size={10} color={SwissColors.swissRed} />
+                <Text style={styles.transportText}>{item.transportType}</Text>
+              </View>
+            )}
+          </View>
         </View>
         
         <View style={styles.locationRow}>
@@ -106,12 +114,16 @@ export default function HomeScreen() {
 
         <View style={styles.cardFooter}>
           <View style={[styles.statusBadge, getStatusColor(item.status)]}>
+            <View style={styles.statusDot} />
             <Text style={styles.statusText}>{item.status}</Text>
           </View>
           
-          <Text style={[styles.priceText, isDarkMode && styles.textDark]}>
-            ${item.price?.toFixed(2) || '0.00'}
-          </Text>
+          <View style={styles.priceContainer}>
+            <Text style={styles.priceLabel}>from</Text>
+            <Text style={[styles.priceText, isDarkMode && styles.textDark]}>
+              ${item.price?.toFixed(0) || '0'}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -121,37 +133,42 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
         <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Hello, {user?.firstName || 'Traveler'}!</Text>
-            <Text style={styles.subtitle}>Find transport & explore destinations</Text>
-          </View>
-          <View style={styles.headerIcons}>
-            <Feather name="bell" size={24} color={isDarkMode ? '#fff' : SwissColors.neutralCharcoal} />
+          <View style={styles.headerContent}>
+            <View>
+              <Text style={styles.greeting}>Hello, {user?.firstName || 'Traveler'}! 👋</Text>
+              <Text style={styles.subtitle}>Discover Swiss destinations</Text>
+            </View>
+            <TouchableOpacity style={styles.notificationButton}>
+              <Feather name="bell" size={22} color={isDarkMode ? '#fff' : SwissColors.neutralCharcoal} />
+              <View style={styles.notificationBadge} />
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
 
-      <View style={styles.searchContainer}>
-        <Feather name="search" size={20} color={isDarkMode ? '#888' : '#666'} style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search stations, routes..."
-          placeholderTextColor={isDarkMode ? '#888' : '#999'}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <Feather name="x" size={20} color={isDarkMode ? '#888' : '#666'} />
-          </TouchableOpacity>
-        )}
+      <View style={styles.searchWrapper}>
+        <View style={styles.searchContainer}>
+          <Feather name="search" size={20} color={SwissColors.swissRed} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search stations, routes..."
+            placeholderTextColor={isDarkMode ? '#888' : '#999'}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearButton}>
+              <Feather name="x-circle" size={18} color={isDarkMode ? '#888' : '#666'} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {loading && !refreshing ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
+          <ActivityIndicator size="large" color={SwissColors.swissRed} />
         </View>
       ) : (
         <FlatList
@@ -160,7 +177,7 @@ export default function HomeScreen() {
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContent}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#007AFF" />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={SwissColors.swissRed} />
           }
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
@@ -199,45 +216,79 @@ const getStyles = (isDarkMode: boolean) =>
       backgroundColor: isDarkMode ? '#000' : SwissColors.swissWhite,
     },
     safeArea: {
-      backgroundColor: isDarkMode ? '#000' : '#fff',
+      backgroundColor: 'transparent',
     },
     header: {
+      paddingHorizontal: SCREEN_WIDTH * 0.05,
+      paddingVertical: SCREEN_HEIGHT * 0.025,
+      backgroundColor: isDarkMode ? '#000' : '#fff',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDarkMode ? 0 : 0.05,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    headerContent: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingHorizontal: SCREEN_WIDTH * 0.05,
-      paddingVertical: SCREEN_HEIGHT * 0.02,
-      backgroundColor: isDarkMode ? '#000' : '#fff',
-      borderBottomWidth: 1,
-      borderBottomColor: isDarkMode ? '#222' : SwissColors.steelGray + '30',
     },
     greeting: {
-      fontSize: SCREEN_WIDTH * 0.06,
-      fontWeight: 'bold',
+      fontSize: SCREEN_WIDTH * 0.065,
+      fontWeight: '800',
       color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
+      letterSpacing: -0.5,
     },
     subtitle: {
-      fontSize: SCREEN_WIDTH * 0.035,
+      fontSize: SCREEN_WIDTH * 0.038,
       color: isDarkMode ? '#888' : SwissColors.textSecondary,
-      marginTop: SCREEN_HEIGHT * 0.005,
+      marginTop: SCREEN_HEIGHT * 0.006,
+      fontWeight: '500',
     },
-    headerIcons: {
-      flexDirection: 'row',
-      gap: 16,
+    notificationButton: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: isDarkMode ? '#1C1C1C' : SwissColors.swissWhite,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    notificationBadge: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: SwissColors.swissRed,
+    },
+    searchWrapper: {
+      paddingHorizontal: SCREEN_WIDTH * 0.05,
+      paddingVertical: SCREEN_HEIGHT * 0.02,
     },
     searchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: isDarkMode ? '#111' : '#fff',
-      marginHorizontal: SCREEN_WIDTH * 0.05,
-      marginVertical: SCREEN_HEIGHT * 0.02,
+      backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
       paddingHorizontal: SCREEN_WIDTH * 0.04,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: isDarkMode ? '#333' : SwissColors.steelGray + '50',
+      paddingVertical: SCREEN_HEIGHT * 0.015,
+      borderRadius: 16,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: isDarkMode ? 0 : 0.08,
+      shadowRadius: 12,
+      elevation: 3,
     },
     searchIcon: {
-      marginRight: SCREEN_WIDTH * 0.02,
+      marginRight: SCREEN_WIDTH * 0.03,
+    },
+    clearButton: {
+      padding: 4,
     },
     searchInput: {
       flex: 1,
@@ -247,37 +298,55 @@ const getStyles = (isDarkMode: boolean) =>
     },
     listContent: {
       paddingHorizontal: SCREEN_WIDTH * 0.05,
+      paddingTop: SCREEN_HEIGHT * 0.01,
       paddingBottom: SCREEN_HEIGHT * 0.025,
     },
     card: {
-      backgroundColor: '#fff',
-      borderRadius: 16,
-      marginBottom: SCREEN_HEIGHT * 0.02,
+      backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
+      borderRadius: 20,
+      marginBottom: SCREEN_HEIGHT * 0.022,
       overflow: 'hidden',
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: isDarkMode ? 0 : 0.12,
+      shadowRadius: 16,
+      elevation: 6,
     },
     cardDark: {
-      backgroundColor: '#111',
+      backgroundColor: '#1C1C1C',
+    },
+    cardImageContainer: {
+      position: 'relative',
+      width: '100%',
+      height: SCREEN_HEIGHT * 0.26,
     },
     cardImage: {
       width: '100%',
-      height: SCREEN_HEIGHT * 0.25,
+      height: '100%',
       backgroundColor: isDarkMode ? '#222' : '#f0f0f0',
+    },
+    imageOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.15)',
     },
     favoriteButton: {
       position: 'absolute',
-      top: SCREEN_HEIGHT * 0.015,
-      right: SCREEN_WIDTH * 0.03,
-      width: SCREEN_WIDTH * 0.1,
-      height: SCREEN_WIDTH * 0.1,
-      borderRadius: SCREEN_WIDTH * 0.05,
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      top: SCREEN_HEIGHT * 0.018,
+      right: SCREEN_WIDTH * 0.04,
+      zIndex: 10,
+    },
+    favoriteButtonInner: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
       justifyContent: 'center',
       alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 4,
     },
     heartFilled: {
       fontWeight: 'bold',
@@ -286,33 +355,38 @@ const getStyles = (isDarkMode: boolean) =>
       fontWeight: 'normal',
     },
     cardContent: {
-      padding: SCREEN_WIDTH * 0.04,
+      padding: SCREEN_WIDTH * 0.045,
     },
     cardHeader: {
+      marginBottom: SCREEN_HEIGHT * 0.012,
+    },
+    titleContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: SCREEN_HEIGHT * 0.01,
+      justifyContent: 'space-between',
+      gap: 8,
     },
     cardTitle: {
-      fontSize: SCREEN_WIDTH * 0.045,
-      fontWeight: 'bold',
+      fontSize: SCREEN_WIDTH * 0.048,
+      fontWeight: '700',
       color: SwissColors.neutralCharcoal,
       flex: 1,
+      letterSpacing: -0.3,
     },
     transportBadge: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: SwissColors.transportBlue + '15',
-      paddingHorizontal: SCREEN_WIDTH * 0.02,
-      paddingVertical: SCREEN_HEIGHT * 0.005,
-      borderRadius: 8,
+      backgroundColor: SwissColors.swissRed + '15',
+      paddingHorizontal: SCREEN_WIDTH * 0.025,
+      paddingVertical: SCREEN_HEIGHT * 0.006,
+      borderRadius: 12,
       gap: 4,
     },
     transportText: {
-      fontSize: SCREEN_WIDTH * 0.028,
-      color: SwissColors.transportBlue,
-      fontWeight: '600',
+      fontSize: SCREEN_WIDTH * 0.03,
+      color: SwissColors.swissRed,
+      fontWeight: '700',
+      letterSpacing: 0.5,
     },
     locationRow: {
       flexDirection: 'row',
@@ -340,21 +414,43 @@ const getStyles = (isDarkMode: boolean) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      marginTop: SCREEN_HEIGHT * 0.006,
     },
     statusBadge: {
-      paddingHorizontal: SCREEN_WIDTH * 0.03,
-      paddingVertical: SCREEN_HEIGHT * 0.005,
-      borderRadius: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: SCREEN_WIDTH * 0.032,
+      paddingVertical: SCREEN_HEIGHT * 0.007,
+      borderRadius: 16,
+      gap: 6,
+    },
+    statusDot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: '#fff',
     },
     statusText: {
       color: '#fff',
-      fontSize: SCREEN_WIDTH * 0.03,
-      fontWeight: '600',
+      fontSize: SCREEN_WIDTH * 0.028,
+      fontWeight: '700',
+      letterSpacing: 0.3,
+      textTransform: 'uppercase',
+    },
+    priceContainer: {
+      alignItems: 'flex-end',
+    },
+    priceLabel: {
+      fontSize: SCREEN_WIDTH * 0.026,
+      color: SwissColors.textSecondary,
+      fontWeight: '500',
+      marginBottom: 2,
     },
     priceText: {
-      fontSize: SCREEN_WIDTH * 0.04,
-      fontWeight: 'bold',
-      color: SwissColors.transportBlue,
+      fontSize: SCREEN_WIDTH * 0.048,
+      fontWeight: '800',
+      color: SwissColors.swissRed,
+      letterSpacing: -0.5,
     },
     loadingContainer: {
       flex: 1,
