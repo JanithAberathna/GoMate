@@ -1,21 +1,47 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Swiss City Navigation Color Palette (Swiss Design Inspired)
+ * Clean, minimal, and high visibility - reflecting Swiss graphic design tradition
  */
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
+// Swiss Design Color Palette
+export const SwissColors = {
+  // Primary Colors
+  swissRed: '#D52B1E',        // Swiss Red - for important actions, destination pins
+  transportBlue: '#005BBB',    // Transport Blue - main navigation, buttons, routes
+  
+  // Secondary Colors
+  alpineGreen: '#2F8F4E',      // Alpine Green - parks, nature, secondary highlights
+  swissWhite: '#F7F7F7',       // Swiss White - clean backgrounds
+  neutralCharcoal: '#1C1C1C',  // Neutral Charcoal - titles, labels, text
+  
+  // Accent Colors
+  cautionYellow: '#FFB300',    // Caution Yellow - alerts, warnings, POI highlights
+  steelGray: '#B0B5BD',        // Steel Gray - borders, inactive tabs, cards
+  
+  // Text Colors
+  textPrimary: '#1C1C1C',      // Primary text
+  textSecondary: '#4A4A4A',    // Secondary text, subtitles
+};
+
+const tintColorLight = SwissColors.transportBlue;
 const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: SwissColors.textPrimary,
+    background: SwissColors.swissWhite,
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    icon: SwissColors.steelGray,
+    tabIconDefault: SwissColors.steelGray,
+    tabIconSelected: SwissColors.transportBlue,
+    card: '#FFFFFF',
+    border: SwissColors.steelGray,
+    primary: SwissColors.transportBlue,
+    secondary: SwissColors.alpineGreen,
+    accent: SwissColors.swissRed,
+    warning: SwissColors.cautionYellow,
   },
   dark: {
     text: '#ECEDEE',
@@ -24,6 +50,12 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    card: '#1C1C1C',
+    border: '#333333',
+    primary: SwissColors.transportBlue,
+    secondary: SwissColors.alpineGreen,
+    accent: SwissColors.swissRed,
+    warning: SwissColors.cautionYellow,
   },
 };
 
