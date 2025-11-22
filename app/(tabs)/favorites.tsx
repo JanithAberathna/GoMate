@@ -6,13 +6,14 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { toggleFavorite } from '@/store/slices/favoritesSlice';
 import { Destination } from '@/store/slices/destinationsSlice';
+import { SwissColors } from '@/constants/theme';
 
 export default function FavoritesScreen() {
   const router = useRouter();
@@ -28,17 +29,24 @@ export default function FavoritesScreen() {
     <TouchableOpacity
       style={[styles.card, isDarkMode && styles.cardDark]}
       onPress={() => router.push(`/details/${item.id}`)}
-      activeOpacity={0.7}
+      activeOpacity={0.9}
     >
-      <Image source={{ uri: item.image }} style={styles.cardImage} />
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: item.image }} style={styles.cardImage} />
+        <View style={styles.imageGradient} />
+      </View>
       
       <View style={styles.cardContent}>
         <View style={styles.cardHeader}>
           <Text style={[styles.cardTitle, isDarkMode && styles.textDark]} numberOfLines={1}>
             {item.name}
           </Text>
-          <TouchableOpacity onPress={() => handleRemoveFavorite(item)}>
-            <Feather name="heart" size={24} color="#ff3b30" />
+          <TouchableOpacity 
+            onPress={() => handleRemoveFavorite(item)}
+            style={styles.heartButton}
+            activeOpacity={0.7}
+          >
+            <Feather name="heart" size={20} color={SwissColors.swissRed} />
           </TouchableOpacity>
         </View>
         
@@ -107,14 +115,17 @@ export default function FavoritesScreen() {
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
+    case 'operating':
     case 'active':
-      return { backgroundColor: '#34c759' };
+      return { backgroundColor: SwissColors.alpineGreen };
     case 'limited':
-      return { backgroundColor: '#ff9500' };
+    case 'limited service':
+      return { backgroundColor: SwissColors.cautionYellow };
     case 'unavailable':
-      return { backgroundColor: '#ff3b30' };
+    case 'closed':
+      return { backgroundColor: SwissColors.swissRed };
     default:
-      return { backgroundColor: '#888' };
+      return { backgroundColor: SwissColors.steelGray };
   }
 };
 
@@ -122,23 +133,27 @@ const getStyles = (isDarkMode: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: isDarkMode ? '#000' : '#f5f5f5',
+      backgroundColor: isDarkMode ? '#000' : SwissColors.swissWhite,
     },
     header: {
       paddingHorizontal: 20,
-      paddingVertical: 20,
+      paddingVertical: 24,
       backgroundColor: isDarkMode ? '#000' : '#fff',
-      borderBottomWidth: 1,
-      borderBottomColor: isDarkMode ? '#222' : '#e5e5e5',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDarkMode ? 0 : 0.05,
+      shadowRadius: 8,
+      elevation: 2,
     },
     title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      color: isDarkMode ? '#fff' : '#000',
+      fontSize: 32,
+      fontWeight: '800',
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
+      letterSpacing: -0.5,
     },
     count: {
       fontSize: 14,
-      color: isDarkMode ? '#888' : '#666',
+      color: isDarkMode ? '#888' : SwissColors.textSecondary,
       marginTop: 4,
     },
     listContent: {
@@ -147,28 +162,41 @@ const getStyles = (isDarkMode: boolean) =>
       paddingBottom: 20,
     },
     card: {
-      backgroundColor: '#fff',
-      borderRadius: 16,
+      backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
+      borderRadius: 20,
       marginBottom: 16,
       overflow: 'hidden',
       flexDirection: 'row',
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: isDarkMode ? 0 : 0.12,
+      shadowRadius: 16,
+      elevation: 6,
     },
     cardDark: {
-      backgroundColor: '#111',
+      backgroundColor: '#1C1C1C',
+    },
+    imageContainer: {
+      position: 'relative',
+      width: 130,
     },
     cardImage: {
-      width: 120,
+      width: '100%',
       height: '100%',
       backgroundColor: isDarkMode ? '#222' : '#f0f0f0',
     },
+    imageGradient: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      bottom: 0,
+      width: 30,
+      backgroundColor: isDarkMode ? 'rgba(28, 28, 28, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+    },
     cardContent: {
       flex: 1,
-      padding: 12,
+      padding: 16,
+      justifyContent: 'space-between',
     },
     cardHeader: {
       flexDirection: 'row',
@@ -176,12 +204,16 @@ const getStyles = (isDarkMode: boolean) =>
       alignItems: 'flex-start',
       marginBottom: 8,
     },
+    heartButton: {
+      padding: 4,
+    },
     cardTitle: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#000',
+      fontSize: 17,
+      fontWeight: '700',
+      color: SwissColors.neutralCharcoal,
       flex: 1,
       marginRight: 8,
+      letterSpacing: -0.3,
     },
     locationRow: {
       flexDirection: 'row',
@@ -190,13 +222,13 @@ const getStyles = (isDarkMode: boolean) =>
     },
     locationText: {
       fontSize: 12,
-      color: '#666',
+      color: SwissColors.textSecondary,
       marginLeft: 4,
       flex: 1,
     },
     descriptionText: {
       fontSize: 12,
-      color: '#666',
+      color: SwissColors.textSecondary,
       lineHeight: 16,
       marginBottom: 8,
     },
@@ -246,7 +278,7 @@ const getStyles = (isDarkMode: boolean) =>
     },
     exploreButton: {
       marginTop: 24,
-      backgroundColor: '#007AFF',
+      backgroundColor: SwissColors.swissRed,
       paddingHorizontal: 24,
       paddingVertical: 12,
       borderRadius: 12,
