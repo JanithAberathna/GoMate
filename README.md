@@ -1,16 +1,17 @@
-# GoMate - Travel & Transport Mobile Application
+# GoMate - Swiss Travel & Transport Mobile Application
 
-A comprehensive React Native mobile application built with Expo for exploring destinations and managing travel preferences.
+A modern React Native mobile application built with Expo for exploring Swiss destinations and managing travel preferences with real-time Swiss transport data.
 
 ## 📱 Project Overview
 
-GoMate is a feature-rich travel and transport application that allows users to:
-- Browse and search travel destinations
-- View detailed destination information
-- Save favorite destinations
+GoMate is a feature-rich Swiss travel and transport application that allows users to:
+- Browse real Swiss destinations with live transport data
+- View detailed destination and connection information
+- Save favorite Swiss locations
 - Manage user profiles
 - Toggle dark mode theme
 - Authenticate securely
+- Experience modern glassmorphic UI design
 
 ## 🎯 Key Features
 
@@ -30,16 +31,17 @@ GoMate is a feature-rich travel and transport application that allows users to:
 - **Protected Routes**: Authentication-based route protection
 
 ### ✅ Home Screen (Dynamic Item List)
-- **API Integration**: Fetches destinations from DummyJSON API
-- **Card-Based UI**: Each destination displayed with:
-  - High-quality image
-  - Title and description
-  - Location with map pin icon
-  - Status badge (Active/Limited/Unavailable)
-  - Star rating
+- **Swiss Transport API Integration**: Fetches real-time data from transport.opendata.ch
+- **15 Swiss Destinations**: Zurich, Geneva, Basel, Bern, Lausanne, Lucerne, Lugano, St. Gallen, Interlaken, Zermatt, Montreux, Grindelwald, Davos, Locarno, Thun
+- **Modern Glassmorphic Cards**: Each destination displayed with:
+  - Location-specific high-quality images
+  - Station name and next departure time
+  - Transport type badges (train, bus, tram)
+  - Real connection data with duration and platform
   - Favorite toggle button
-- **Search Functionality**: Real-time search by name, location, or category
-- **Pull-to-Refresh**: Swipe down to reload destinations
+  - Elevated shadows and rounded corners
+- **Search Functionality**: Real-time search by station name or location
+- **Pull-to-Refresh**: Swipe down to reload live transport data
 
 ### ✅ Details Screen
 - **Comprehensive Information**: Full destination details including:
@@ -69,23 +71,36 @@ GoMate is a feature-rich travel and transport application that allows users to:
 - **Async Actions**: Thunks for API calls and storage operations
 
 ### ✅ Styling & UI/UX
+- **Modern Design Era**: Contemporary glassmorphism with elevated shadows
+- **Swiss Design Color Palette**: 
+  - Primary: Swiss Red (#D52B1E)
+  - Accent: Transport Blue (#005BBB)
+  - Secondary: Alpine Green (#2F8F4E)
+  - Background: Swiss White (#F7F7F7)
+  - Text: Neutral Charcoal (#1C1C1C)
+  - Warning: Caution Yellow (#FFB300)
 - **Feather Icons**: Consistent iconography throughout
-- **Dark Mode**: Toggle between light and dark themes
-- **Responsive Design**: Works on various screen sizes
+- **Dark Mode**: Toggle between light and dark themes with persistent preference
+- **Responsive Design**: Works on various screen sizes using Dimensions API
 - **Smooth Animations**: Native feel with haptic feedback
-- **Color Scheme**: Professional blue (#007AFF) primary color
-- **Status Colors**: 
-  - Active: Green (#34c759)
-  - Limited: Orange (#ff9500)
-  - Unavailable: Red (#ff3b30)
+- **Bold Typography**: 700-800 font weights with negative letter spacing
+- **Rounded Corners**: 20px border radius for modern aesthetic
+- **Glassmorphic Effects**: Semi-transparent backgrounds with backdrop blur
+- **Elevated Shadows**: Multi-layer shadows for depth (6-16px)
 
 ### 🎁 Bonus Features
+- **Real Swiss Transport Data**: Live connections from Swiss Transport API (transport.opendata.ch)
+- **Modern Glassmorphic UI**: Contemporary design with elevated shadows and blur effects
+- **Swiss Design System**: Complete color palette inspired by Swiss national identity
+- **Location-Specific Images**: High-quality Swiss station and landscape imagery
 - **Dark Mode Toggle**: Persistent theme preference with smooth transitions
 - **Search Functionality**: Real-time destination filtering
 - **Pull-to-Refresh**: Manual data refresh capability
+- **Safe Area Handling**: Proper status bar integration using react-native-safe-area-context
 - **Empty States**: User-friendly messages for empty lists
 - **User Stats**: Display favorites count in profile
 - **Loading States**: Activity indicators during async operations
+- **Responsive Typography**: Bold weights (700-800) with optimized letter spacing
 
 ## 🏗️ Project Structure
 
@@ -121,13 +136,14 @@ GoMate/
 
 - **React Native**: ^0.81.5
 - **Expo**: ~54.0.25
-- **Expo Router**: ~6.0.15 (Navigation)
-- **Redux Toolkit**: ^2.5.0 (State Management)
+- **Expo Router**: ~6.0.15 (File-based Navigation)
+- **Redux Toolkit**: ^2.10.1 (State Management)
 - **React Redux**: ^9.2.0
 - **AsyncStorage**: ^2.2.0 (Data Persistence)
-- **Axios**: ^1.7.9 (HTTP Client)
-- **Formik**: ^2.4.6 (Form Management)
-- **Yup**: ^1.6.1 (Form Validation)
+- **Axios**: ^1.13.2 (HTTP Client for Swiss Transport API)
+- **Formik**: ^2.4.9 (Form Management)
+- **Yup**: ^1.7.1 (Form Validation)
+- **React Native Safe Area Context**: ~5.6.0 (Status bar handling)
 - **Feather Icons**: @expo/vector-icons
 - **TypeScript**: ~5.9.2
 
@@ -165,9 +181,12 @@ Use these credentials to test the application:
 
 The app uses the following public APIs:
 
+- **Swiss Transport API**: https://transport.opendata.ch/v1/ (No API key required)
+  - `/locations`: Search for Swiss stations and locations
+  - `/connections`: Get real-time connection data between stations
 - **Authentication**: https://dummyjson.com/auth/login
 - **User Registration**: https://dummyjson.com/users/add
-- **Destinations Data**: https://dummyjson.com/products
+- **Station Images**: Unsplash API with location-specific Swiss imagery
 
 ## 📱 Key Screens
 
@@ -220,13 +239,16 @@ User Action → Dispatch Action → Redux Thunk → API Call/Storage
 
 ## 🚀 Future Enhancements
 
-- Offline mode support
-- Push notifications
-- Social sharing
-- Reviews and ratings
-- Booking functionality
-- Multi-language support
-- Maps integration
+- Real-time train tracking with GPS
+- Offline mode with cached transport schedules
+- Push notifications for delays and platform changes
+- Swiss Travel Pass integration
+- Ticket booking functionality
+- Multi-language support (German, French, Italian, English)
+- Interactive maps with station locations
+- Journey planning with multiple connections
+- Price comparison for different routes
+- Weather integration for Swiss locations
 
 ## 👨‍💻 Development
 
