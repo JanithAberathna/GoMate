@@ -80,7 +80,7 @@ export default function RegisterScreen() {
             onPress={() => router.back()}
             style={styles.backButton}
           >
-            <Feather name="arrow-left" size={24} color="#007AFF" />
+            <Feather name="arrow-left" size={24} color={SwissColors.swissRed} />
           </TouchableOpacity>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Join GoMate and start exploring</Text>
@@ -304,7 +304,7 @@ const getStyles = (isDarkMode: boolean) =>
       marginLeft: 4,
     },
     button: {
-      backgroundColor: '#007AFF',
+      backgroundColor: SwissColors.swissRed,
       height: 50,
       borderRadius: 12,
       justifyContent: 'center',
@@ -328,7 +328,7 @@ const getStyles = (isDarkMode: boolean) =>
       fontSize: 14,
     },
     loginLinkBold: {
-      color: '#007AFF',
+      color: SwissColors.swissRed,
       fontWeight: '600',
     },
   });
