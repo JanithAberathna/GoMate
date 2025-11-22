@@ -1,15 +1,10 @@
-/**
- * Swiss City Navigation Color Palette (Swiss Design Inspired)
- * Clean, minimal, and high visibility - reflecting Swiss graphic design tradition
- */
-
 import { Platform } from 'react-native';
 
 // Swiss Design Color Palette
 export const SwissColors = {
   // Primary Colors
-  swissRed: '#D52B1E',        // Swiss Red - for important actions, destination pins
-  transportBlue: '#005BBB',    // Transport Blue - main navigation, buttons, routes
+  swissRed: '#D52B1E',        // Swiss Red - primary color for actions, buttons, highlights
+  transportBlue: '#005BBB',    // Transport Blue - badges, info elements
   
   // Secondary Colors
   alpineGreen: '#2F8F4E',      // Alpine Green - parks, nature, secondary highlights
@@ -25,7 +20,7 @@ export const SwissColors = {
   textSecondary: '#4A4A4A',    // Secondary text, subtitles
 };
 
-const tintColorLight = SwissColors.transportBlue;
+const tintColorLight = SwissColors.swissRed;
 const tintColorDark = '#fff';
 
 export const Colors = {
@@ -35,12 +30,12 @@ export const Colors = {
     tint: tintColorLight,
     icon: SwissColors.steelGray,
     tabIconDefault: SwissColors.steelGray,
-    tabIconSelected: SwissColors.transportBlue,
+    tabIconSelected: SwissColors.swissRed,
     card: '#FFFFFF',
     border: SwissColors.steelGray,
-    primary: SwissColors.transportBlue,
+    primary: SwissColors.swissRed,
     secondary: SwissColors.alpineGreen,
-    accent: SwissColors.swissRed,
+    accent: SwissColors.transportBlue,
     warning: SwissColors.cautionYellow,
   },
   dark: {
@@ -52,9 +47,9 @@ export const Colors = {
     tabIconSelected: tintColorDark,
     card: '#1C1C1C',
     border: '#333333',
-    primary: SwissColors.transportBlue,
+    primary: SwissColors.swissRed,
     secondary: SwissColors.alpineGreen,
-    accent: SwissColors.swissRed,
+    accent: SwissColors.transportBlue,
     warning: SwissColors.cautionYellow,
   },
 };
