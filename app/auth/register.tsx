@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { registerUser, clearError } from '@/store/slices/authSlice';
 import { router } from 'expo-router';
+import { SwissColors } from '@/constants/theme';
 
 const RegisterSchema = Yup.object().shape({
   firstName: Yup.string()
