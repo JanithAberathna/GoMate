@@ -174,8 +174,8 @@ GoMate/
 
 Use these credentials to test the application:
 
-- **Username**: `emilys`
-- **Password**: `emilyspass`
+- **Username**: `user`
+- **Password**: `user123`
 
 ## 🌐 API Integration
 
