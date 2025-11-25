@@ -85,7 +85,12 @@ export default function DestinationDetailsScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: selectedDestination.image }} style={styles.image} />
+          <Image 
+            source={{ uri: selectedDestination.image }} 
+            style={styles.image} 
+            resizeMode="cover"
+            defaultSource={require('@/assets/images/react-logo.png')}
+          />
           
           <View style={styles.headerButtons}>
             <TouchableOpacity style={styles.headerButton} onPress={() => router.back()}>

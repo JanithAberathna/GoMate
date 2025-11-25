@@ -67,28 +67,28 @@ export const fetchDestinations = createAsyncThunk(
       
       // Swiss station-specific images - using suitable Swiss train and station images
       const swissStationImages: { [key: string]: string } = {
-        'Zurich HB': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=600&fit=crop', // Railway station
-        'Zurich': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=600&fit=crop',
-        'Geneva': 'https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=800&h=600&fit=crop', // Geneva cityscape
-        'Basel SBB': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop', // City architecture
+        'Zurich HB': 'https://images.unsplash.com/photo-1604212399401-5fd807a65e18?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHRyYWluJTIwc3RhdGlvbnxlbnwwfHwwfHx8MA%3D%3D', // Railway station
+        'Zurich': 'https://images.unsplash.com/photo-1604212399401-5fd807a65e18?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHRyYWluJTIwc3RhdGlvbnxlbnwwfHwwfHx8MA%3D%3D',
+        'Geneva': 'https://images.unsplash.com/photo-1660810535332-7ecba72ed873?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE3fHx8ZW58MHx8fHx8', // Geneva cityscape
+        'Basel SBB': 'https://images.unsplash.com/photo-1527839321757-ad3a2f2be351?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dHJhaW4lMjBzdGF0aW9ufGVufDB8fDB8fHww', // City architecture
         'Basel': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
-        'Bern': 'https://images.unsplash.com/photo-1553778263-73a83bab2b0b?w=800&h=600&fit=crop', // Urban landscape
+        'Bern': 'https://images.unsplash.com/photo-1527295110-5145f6b148d0?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8enVnfGVufDB8fDB8fHww', // Urban landscape
         'Lausanne': 'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?w=800&h=600&fit=crop', // Modern city
-        'Lucerne': 'https://images.unsplash.com/photo-1527631746610-ab6f6e217e3a?w=800&h=600&fit=crop', // Swiss city view
-        'Lugano': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=600&fit=crop', // Scenic landscape
+        'Lucerne': 'https://images.unsplash.com/photo-1514970746-d4a465d514d0?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c3dpc3MlMjB0cmFpbnxlbnwwfHwwfHx8MA%3D%3D', // Swiss city view
+        'Lugano': 'https://images.unsplash.com/photo-1572041341933-57caa3b8f6d5?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dpc3MlMjB0cmFpbnxlbnwwfHwwfHx8MA%3D%3D', // Scenic landscape
         'St. Gallen': 'https://images.unsplash.com/photo-1465447142348-e9952c393450?w=800&h=600&fit=crop', // Mountain view
         'Winterthur': 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&h=600&fit=crop', // Urban setting
         'Biel/Bienne': 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=600&fit=crop', // Lake view
-        'Thun': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain landscape
-        'Köniz': 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=600&fit=crop', // Swiss nature
+        'Thun': 'https://images.unsplash.com/photo-1622670719955-4e1c43db73ef?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJhaW5zdGF0aW9ufGVufDB8fDB8fHww', // Mountain landscape
+        'Köniz': 'https://images.unsplash.com/photo-1593186344142-ef775a6e596f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3dpc3MlMjB0cmFpbnxlbnwwfHwwfHx8MA%3D%3D', // Swiss nature
         'La Chaux-de-Fonds': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop', // Mountain peak
-        'Schaffhausen': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop', // Natural landscape
+        'Schaffhausen': 'https://images.unsplash.com/photo-1563196314-2f7f1facf557?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHN3aXR6ZXJsYW5kJTIwdHJhaW58ZW58MHx8MHx8fDA%3D', // Natural landscape
         'Fribourg': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Alpine scenery
         'Interlaken': 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=600&fit=crop', // Lake and mountains
-        'Zermatt': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain vista
+        'Zermatt': 'https://images.unsplash.com/photo-1574499307074-f9a427d03a45?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHN3aXR6ZXJsYW5kJTIwdHJhaW58ZW58MHx8MHx8fDA%3D', // Mountain vista
         'Montreux': 'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=800&h=600&fit=crop', // Lakeside view
-        'Grindelwald': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Alpine peaks
-        'Davos': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop', // Mountain scenery
+        'Grindelwald': 'https://images.unsplash.com/photo-1572803090936-72796aef96a2?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3dpdHplcmxhbmQlMjB0cmFpbnxlbnwwfHwwfHx8MA%3D%3D', // Alpine peaks
+        'Davos': 'https://images.unsplash.com/photo-1672498821497-deee7c266a69?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3dpc3MlMjB0cmFpbnxlbnwwfHwwfHx8MA%3D%3D', // Mountain scenery
         'Locarno': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop', // Lake setting
       };
       
