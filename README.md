@@ -22,8 +22,8 @@ GoMate is a comprehensive Swiss travel and transport application that provides:
 - **Session Management**: Automatic session restoration on app restart
 - **Form Validation**: Yup schema validation for email, username, and password
 - **Demo Credentials**: 
-  - Username: `user`
-  - Password: `user123`
+  - Username: `emilys`
+  - Password: `emilyspass`
 - **Personalized Experience**: User's name displayed throughout the app
 
 ### ✅ Navigation Structure
