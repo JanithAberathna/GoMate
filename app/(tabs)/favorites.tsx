@@ -32,7 +32,12 @@ export default function FavoritesScreen() {
       activeOpacity={0.9}
     >
       <View style={styles.imageContainer}>
-        <Image source={{ uri: item.image }} style={styles.cardImage} />
+        <Image 
+          source={{ uri: item.image }} 
+          style={styles.cardImage} 
+          resizeMode="cover"
+          defaultSource={require('@/assets/images/react-logo.png')}
+        />
         <View style={styles.imageGradient} />
       </View>
       
