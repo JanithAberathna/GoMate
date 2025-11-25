@@ -67,7 +67,12 @@ export default function HomeScreen() {
       activeOpacity={0.9}
     >
       <View style={styles.cardImageContainer}>
-        <Image source={{ uri: item.image }} style={styles.cardImage} />
+        <Image 
+          source={{ uri: item.image }} 
+          style={styles.cardImage} 
+          resizeMode="cover"
+          defaultSource={require('@/assets/images/react-logo.png')}
+        />
         <View style={styles.imageOverlay} />
         <TouchableOpacity
           style={styles.favoriteButton}
