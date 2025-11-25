@@ -159,7 +159,7 @@ const getStyles = (isDarkMode: boolean) =>
     listContent: {
       paddingHorizontal: 20,
       paddingTop: 20,
-      paddingBottom: 20,
+      paddingBottom: 100,
     },
     card: {
       backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
@@ -167,6 +167,7 @@ const getStyles = (isDarkMode: boolean) =>
       marginBottom: 16,
       overflow: 'hidden',
       flexDirection: 'row',
+      height: 160,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 6 },
       shadowOpacity: isDarkMode ? 0 : 0.12,
