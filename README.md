@@ -1,67 +1,86 @@
 # GoMate - Swiss Travel & Transport Mobile Application
 
-A modern React Native mobile application built with Expo for exploring Swiss destinations and managing travel preferences with real-time Swiss transport data.
+A modern React Native mobile application built with Expo for exploring Swiss public transport schedules, planning journeys, and managing travel preferences with real-time data from the Swiss Transport API.
 
 ## 📱 Project Overview
 
-GoMate is a feature-rich Swiss travel and transport application that allows users to:
-- Browse real Swiss destinations with live transport data
-- View detailed destination and connection information
-- Save favorite Swiss locations
-- Manage user profiles
-- Toggle dark mode theme
-- Authenticate securely
-- Experience modern glassmorphic UI design
+GoMate is a comprehensive Swiss travel and transport application that provides:
+- **Real-time Swiss train schedules** - Live departure times from major Swiss stations
+- **Journey planning** - Search connections between any two Swiss stations
+- **Destination exploration** - Browse 15 major Swiss transport hubs
+- **Favorites management** - Save your frequently used stations
+- **User authentication** - Secure login and registration
+- **Dark mode support** - Toggle between light and dark themes
+- **Modern UI design** - Swiss Design-inspired interface with glassmorphic elements
 
 ## 🎯 Key Features
 
 ### ✅ User Authentication
 - **Login & Registration**: Complete user authentication flow with form validation
-- **Secure Storage**: User credentials stored securely using AsyncStorage
+- **DummyJSON API Integration**: Secure authentication using https://dummyjson.com/auth/login
+- **Secure Storage**: User credentials and session stored using AsyncStorage
 - **Session Management**: Automatic session restoration on app restart
-- **Form Validation**: Using Yup schema validation for email, username, and password
+- **Form Validation**: Yup schema validation for email, username, and password
 - **Demo Credentials**: 
   - Username: `user`
   - Password: `user123`
+- **Personalized Experience**: User's name displayed throughout the app
 
 ### ✅ Navigation Structure
-- **Stack Navigation**: For authentication and detail screens
-- **Bottom Tab Navigation**: Three main tabs (Home, Favorites, Profile)
-- **Expo Router**: File-based routing for seamless navigation
+- **Expo Router**: Modern file-based routing system
+- **Stack Navigation**: For authentication, details, and journey planning
+- **Bottom Tab Navigation**: Five main tabs (Index, Home, Explore, Favorites, Profile)
 - **Protected Routes**: Authentication-based route protection
+- **Deep Linking**: Direct navigation to specific screens
+- **Web Support**: Responsive design with 480px centered container
 
 ### ✅ Home Screen (Dynamic Item List)
-- **Swiss Transport API Integration**: Fetches real-time data from transport.opendata.ch
-- **15 Swiss Destinations**: Zurich, Geneva, Basel, Bern, Lausanne, Lucerne, Lugano, St. Gallen, Interlaken, Zermatt, Montreux, Grindelwald, Davos, Locarno, Thun
-- **Modern Glassmorphic Cards**: Each destination displayed with:
-  - Location-specific high-quality images
-  - Station name and next departure time
-  - Transport type badges (train, bus, tram)
-  - Real connection data with duration and platform
-  - Favorite toggle button
-  - Elevated shadows and rounded corners
-- **Search Functionality**: Real-time search by station name or location
-- **Pull-to-Refresh**: Swipe down to reload live transport data
+- **Swiss Transport API Integration**: Live data from transport.opendata.ch (no API key required)
+- **15 Major Swiss Stations**: Zurich HB, Geneva, Basel SBB, Bern, Lausanne, Lucerne, Lugano, St. Gallen, Winterthur, Biel/Bienne, Thun, Köniz, La Chaux-de-Fonds, Schaffhausen, Fribourg
+- **Attractive Modern Cards** with:
+  - Large station images (32% screen height)
+  - Bold typography (800 font weight)
+  - Next 3 departure times in highlighted badge
+  - Location and operating status
+  - Favorite toggle with heart icon
+  - Swiss Red shadows and 24px border radius
+- **Dynamic Station Search**: Search any Swiss station with real-time suggestions
+- **Pull-to-Refresh**: Swipe down to reload live departure data
+- **Journey Planner Button**: Quick access to connection search
+- **Performance Optimized**: No delays, instant navigation
 
-### ✅ Details Screen
-- **Comprehensive Information**: Full destination details including:
-  - Large hero image
+### ✅ Details Screen (Real-time Departures)
+- **Live Departure Board**: Shows all trains from current time to end of day
+- **Comprehensive Train Information**:
+  - Departure time (large, Swiss Red)
+  - Train type with full name (e.g., "IC 715" - "InterCity")
+  - Destination station with arrow indicator
+  - Platform number
+- **Departure Cards**: Modern cards with:
+  - Time filtering (only future departures today)
+  - Train category badges (IC, S, RE, etc.)
+  - Full train type names for user understanding
+  - Platform and destination details
+- **Station Information**:
+  - Hero image and location
+  - Description and facilities
   - Rating and status
-  - Location and category
-  - Detailed description
-  - Price information
-  - Features list
-- **Interactive Elements**: 
+- **Interactive Elements**:
   - Back navigation
   - Favorite toggle
-  - Book Now button
-- **Responsive Design**: Adapts to different screen sizes
+  - Scrollable departure list with bottom margin
 
 ### ✅ Favorites System
-- **Add/Remove Favorites**: Toggle favorites from home or details screen
-- **Persistent Storage**: Favorites saved using AsyncStorage
-- **Dedicated Favorites Screen**: View all saved destinations
-- **Empty State**: Encouraging UI when no favorites exist
+- **Add/Remove Favorites**: Toggle from home or details screen with heart icon
+- **Persistent Storage**: Favorites saved using AsyncStorage via Redux
+- **Dedicated Favorites Screen**: Horizontal card layout with:
+  - Station images (130px width, 160px height)
+  - Station name and location
+  - Rating display
+  - Status badge
+  - Quick remove button
+- **Proper Spacing**: 100px bottom padding for tab bar clearance
+- **Empty State**: Friendly message when no favorites exist
 
 ### ✅ State Management (Redux Toolkit)
 - **Authentication State**: User session and auth status
@@ -88,19 +107,39 @@ GoMate is a feature-rich Swiss travel and transport application that allows user
 - **Glassmorphic Effects**: Semi-transparent backgrounds with backdrop blur
 - **Elevated Shadows**: Multi-layer shadows for depth (6-16px)
 
+### ✨ Journey Planning Feature
+- **Connection Search**: Find routes between any two Swiss stations
+- **Input Fields**: From/To station with swap button
+- **Rich Connection Data**:
+  - Up to 10 connection options
+  - Departure and arrival times
+  - Travel duration (formatted as hours, minutes, seconds)
+  - Number of transfers with badge
+  - Platform information
+  - Complete train sequence (e.g., "IC 715 → S 3 → RE 456")
+  - Full train type names (e.g., "InterCity → S-Bahn → Regional Express")
+- **User-Friendly Display**:
+  - Train codes with full names for easy understanding
+  - Transfer count visualization
+  - Connection cards with all journey details
+- **Error Handling**: Clear messages for invalid stations
+- **Bottom Spacing**: Proper margin for scrollable content
+
 ### 🎁 Bonus Features
-- **Real Swiss Transport Data**: Live connections from Swiss Transport API (transport.opendata.ch)
-- **Modern Glassmorphic UI**: Contemporary design with elevated shadows and blur effects
-- **Swiss Design System**: Complete color palette inspired by Swiss national identity
-- **Location-Specific Images**: High-quality Swiss station and landscape imagery
-- **Dark Mode Toggle**: Persistent theme preference with smooth transitions
-- **Search Functionality**: Real-time destination filtering
-- **Pull-to-Refresh**: Manual data refresh capability
-- **Safe Area Handling**: Proper status bar integration using react-native-safe-area-context
-- **Empty States**: User-friendly messages for empty lists
-- **User Stats**: Display favorites count in profile
-- **Loading States**: Activity indicators during async operations
-- **Responsive Typography**: Bold weights (700-800) with optimized letter spacing
+- **Real-time Swiss Transport Data**: 40+ departures per station from transport.opendata.ch
+- **Journey Planner**: Search connections between any Swiss stations with full route details
+- **Modern Glassmorphic UI**: Contemporary design with elevated shadows (8-20px)
+- **Swiss Design System**: Authentic color palette (Swiss Red #D52B1E, Transport Blue, Alpine Green)
+- **Train Type Education**: Shows both codes and full names (IC = InterCity, S = S-Bahn)
+- **Dark Mode Toggle**: System-wide theme with persistent preference
+- **Dynamic Search**: Search any Swiss station, not limited to defaults
+- **Web Responsive**: 480px centered container for web browsers
+- **Safe Area Handling**: Perfect status bar integration with react-native-safe-area-context
+- **Performance Optimized**: No artificial delays, instant data loading
+- **Time Filtering**: Only shows relevant departures (current time to end of day)
+- **Fallback Handling**: Graceful error handling with fallback data
+- **Loading States**: Smooth loading indicators for async operations
+- **Bold Typography**: 700-800 font weights with -0.5 letter spacing
 
 ## 🏗️ Project Structure
 
@@ -108,28 +147,32 @@ GoMate is a feature-rich Swiss travel and transport application that allows user
 GoMate/
 ├── app/
 │   ├── (tabs)/
-│   │   ├── _layout.tsx          # Tab navigation layout
-│   │   ├── home.tsx              # Home screen with destinations
-│   │   ├── favorites.tsx         # Favorites screen
-│   │   ├── profile.tsx           # User profile screen
-│   │   └── index.tsx             # Redirect to home
+│   │   ├── _layout.tsx           # Bottom tab navigation
+│   │   ├── index.tsx             # Tab 1: Index screen
+│   │   ├── home.tsx              # Tab 2: Home with stations
+│   │   ├── explore.tsx           # Tab 3: Explore screen
+│   │   ├── favorites.tsx         # Tab 4: Saved stations
+│   │   └── profile.tsx           # Tab 5: User profile
 │   ├── auth/
-│   │   ├── login.tsx             # Login screen
+│   │   ├── login.tsx             # Login with DummyJSON API
 │   │   └── register.tsx          # Registration screen
 │   ├── details/
-│   │   └── [id].tsx              # Dynamic destination details
-│   └── _layout.tsx               # Root layout with Redux Provider
+│   │   └── [id].tsx              # Station details with departures
+│   ├── journey/
+│   │   └── plan.tsx              # Journey planner (NEW)
+│   └── _layout.tsx               # Root layout with Redux & web support
 ├── store/
-│   ├── index.ts                  # Redux store configuration
-│   ├── hooks.ts                  # Typed Redux hooks
+│   ├── index.ts                  # Redux store with AsyncStorage
+│   ├── hooks.ts                  # Typed useAppDispatch/useAppSelector
 │   └── slices/
-│       ├── authSlice.ts          # Authentication state
-│       ├── destinationsSlice.ts  # Destinations data
-│       ├── favoritesSlice.ts     # Favorites management
-│       └── themeSlice.ts         # Theme preference
-├── components/                   # Reusable UI components
-├── constants/                    # App constants and theme
-└── hooks/                        # Custom React hooks
+│       ├── authSlice.ts          # Auth state with DummyJSON
+│       ├── destinationsSlice.ts  # Swiss Transport API data
+│       ├── favoritesSlice.ts     # Favorites with AsyncStorage
+│       └── themeSlice.ts         # Dark mode preference
+├── constants/
+│   └── theme.ts                  # Swiss Design color palette
+├── components/                    # Reusable UI components
+└── hooks/                         # Custom React hooks
 ```
 
 ## 🛠️ Technologies Used
@@ -174,28 +217,43 @@ GoMate/
 
 Use these credentials to test the application:
 
-- **Username**: `user`
-- **Password**: `user123`
+- **Username**: `emilys`
+- **Password**: `emilyspass`
+
+This will log you in as **Emily Johnson** with access to all features.
 
 ## 🌐 API Integration
 
 The app uses the following public APIs:
 
-- **Swiss Transport API**: https://transport.opendata.ch/v1/ (No API key required)
-  - `/locations`: Search for Swiss stations and locations
-  - `/connections`: Get real-time connection data between stations
-- **Authentication**: https://dummyjson.com/auth/login
-- **User Registration**: https://dummyjson.com/users/add
-- **Station Images**: Unsplash API with location-specific Swiss imagery
+### Swiss Transport API (https://transport.opendata.ch/v1/)
+- **No API key required** - Open data from Swiss Federal Railways
+- **Endpoints used**:
+  - `/locations?query={station}&type=station` - Search stations
+  - `/stationboard?station={name}&limit=40` - Get departures (40 trains)
+  - `/connections?from={station}&to={station}&limit=10` - Journey planning
+- **Data includes**: Real-time departures, train types, destinations, platforms, durations
+
+### DummyJSON API (https://dummyjson.com/)
+- **Authentication**: POST `/auth/login` - User login with emilys/emilyspass
+- **Returns**: User data (Emily Johnson), access token
+- **User Registration**: POST `/users/add` - New user creation
+
+### Images
+- **Unsplash**: High-quality Swiss landscape and cityscape images
+- **Station-specific**: Unique images for each of 15 major stations
 
 ## 📱 Key Screens
 
-1. **Login Screen**: User authentication with validation
-2. **Register Screen**: New user registration
-3. **Home Screen**: Browse all destinations with search
-4. **Details Screen**: View complete destination information
-5. **Favorites Screen**: Manage saved destinations
-6. **Profile Screen**: User information and settings
+1. **Login Screen**: DummyJSON authentication with Formik + Yup validation
+2. **Register Screen**: New user registration with form validation
+3. **Home Screen**: 15 Swiss stations with search, favorites, and journey planner access
+4. **Details Screen**: Real-time departure board showing all trains from now to end of day
+5. **Journey Planner**: Search connections between any two stations with full route details
+6. **Favorites Screen**: Horizontal cards with saved stations (160px height)
+7. **Profile Screen**: User info, stats, dark mode toggle, and logout
+8. **Explore Screen**: Additional discovery features (tab 3)
+9. **Index Screen**: Entry point with navigation (tab 1)
 
 ## ✨ Best Practices Implemented
 
@@ -239,16 +297,19 @@ User Action → Dispatch Action → Redux Thunk → API Call/Storage
 
 ## 🚀 Future Enhancements
 
-- Real-time train tracking with GPS
+- Real-time train tracking with GPS and live map
 - Offline mode with cached transport schedules
 - Push notifications for delays and platform changes
-- Swiss Travel Pass integration
-- Ticket booking functionality
-- Multi-language support (German, French, Italian, English)
-- Interactive maps with station locations
-- Journey planning with multiple connections
-- Price comparison for different routes
+- Swiss Travel Pass integration and digital ticket storage
+- Ticket booking and payment functionality
+- Multi-language support (German, French, Italian, Romansh, English)
+- Interactive maps with station locations and navigation
+- Price comparison for different routes and transport options
 - Weather integration for Swiss locations
+- Accessibility features (screen reader, high contrast)
+- Apple Watch and Android Wear companion apps
+- QR code scanning for quick station lookup
+- Travel history and statistics
 
 ## 👨‍💻 Development
 
