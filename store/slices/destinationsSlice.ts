@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+export interface Departure {
+  time: string;
+  destination: string;
+  category: string;
+  number: string;
+  platform: string;
+}
+
 export interface Destination {
   id: number;
   name: string;
@@ -13,6 +21,7 @@ export interface Destination {
   price?: number;
   schedule?: string;
   transportType?: string;
+  departures?: Departure[];
 }
 
 interface DestinationsState {
@@ -32,32 +41,55 @@ const initialState: DestinationsState = {
 // Fetch destinations from Swiss Transport API
 export const fetchDestinations = createAsyncThunk(
   'destinations/fetchAll',
-  async (_, { rejectWithValue }) => {
+  async (searchQuery: string = '', { rejectWithValue }) => {
     try {
-      // Using Swiss Transport API for real travel data in Switzerland
-      const swissStations = [
-        'Zurich', 'Geneva', 'Basel', 'Bern', 'Lausanne', 
-        'Lucerne', 'Lugano', 'St. Gallen', 'Interlaken', 'Zermatt',
-        'Montreux', 'Grindelwald', 'Davos', 'Locarno', 'Thun'
-      ];
+      let swissStations: string[] = [];
       
-      // Swiss station-specific images - using reliable Swiss transport and landscape images
+      if (searchQuery && searchQuery.trim() !== '') {
+        // Dynamic search - fetch stations matching user query
+        const searchResponse = await axios.get(
+          `https://transport.opendata.ch/v1/locations?query=${encodeURIComponent(searchQuery)}&type=station`
+        );
+        
+        if (searchResponse.data.stations && searchResponse.data.stations.length > 0) {
+          swissStations = searchResponse.data.stations.slice(0, 15).map((station: any) => station.name);
+        } else {
+          return rejectWithValue('No stations found');
+        }
+      } else {
+        // Default: Fetch major Swiss cities when no search query
+        swissStations = [
+          'Zurich HB', 'Geneva', 'Basel SBB', 'Bern', 'Lausanne', 
+          'Lucerne', 'Lugano', 'St. Gallen', 'Winterthur', 'Biel/Bienne',
+          'Thun', 'Köniz', 'La Chaux-de-Fonds', 'Schaffhausen', 'Fribourg'
+        ];
+      }
+      
+      // Swiss station-specific images - using suitable Swiss train and station images
       const swissStationImages: { [key: string]: string } = {
-        'Zurich': 'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=800&h=600&fit=crop', // Zurich train station
-        'Geneva': 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=600&fit=crop', // Lake view
-        'Basel': 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800&h=600&fit=crop', // Train station
-        'Bern': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountains
-        'Lausanne': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Swiss landscape
-        'Lucerne': 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800&h=600&fit=crop', // City and lake
-        'Lugano': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain lake
-        'St. Gallen': 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop', // Swiss train
-        'Interlaken': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Alpine view
-        'Zermatt': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain peak
-        'Montreux': 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=600&fit=crop', // Lakeside
-        'Grindelwald': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Alps
-        'Davos': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain resort
-        'Locarno': 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=600&fit=crop', // Lake and mountains
-        'Thun': 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800&h=600&fit=crop', // Lake Thun view
+        'Zurich HB': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=600&fit=crop', // Railway station
+        'Zurich': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=600&fit=crop',
+        'Geneva': 'https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=800&h=600&fit=crop', // Geneva cityscape
+        'Basel SBB': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop', // City architecture
+        'Basel': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
+        'Bern': 'https://images.unsplash.com/photo-1553778263-73a83bab2b0b?w=800&h=600&fit=crop', // Urban landscape
+        'Lausanne': 'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?w=800&h=600&fit=crop', // Modern city
+        'Lucerne': 'https://images.unsplash.com/photo-1527631746610-ab6f6e217e3a?w=800&h=600&fit=crop', // Swiss city view
+        'Lugano': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=600&fit=crop', // Scenic landscape
+        'St. Gallen': 'https://images.unsplash.com/photo-1465447142348-e9952c393450?w=800&h=600&fit=crop', // Mountain view
+        'Winterthur': 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&h=600&fit=crop', // Urban setting
+        'Biel/Bienne': 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&h=600&fit=crop', // Lake view
+        'Thun': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain landscape
+        'Köniz': 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=600&fit=crop', // Swiss nature
+        'La Chaux-de-Fonds': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop', // Mountain peak
+        'Schaffhausen': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop', // Natural landscape
+        'Fribourg': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Alpine scenery
+        'Interlaken': 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=600&fit=crop', // Lake and mountains
+        'Zermatt': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Mountain vista
+        'Montreux': 'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=800&h=600&fit=crop', // Lakeside view
+        'Grindelwald': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop', // Alpine peaks
+        'Davos': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop', // Mountain scenery
+        'Locarno': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop', // Lake setting
       };
       
       const destinationsPromises = swissStations.map(async (station, index) => {
@@ -73,30 +105,55 @@ export const fetchDestinations = createAsyncThunk(
           
           const stationData = locationResponse.data.stations[0];
           
-          // Get connections/schedule from this station
-          const connectionsResponse = await axios.get(
-            `https://transport.opendata.ch/v1/connections?from=${encodeURIComponent(station)}&limit=5`
+          // Get stationboard (departures) from this station - fetch more trains
+          const stationboardResponse = await axios.get(
+            `https://transport.opendata.ch/v1/stationboard?station=${encodeURIComponent(station)}&limit=40`
           );
-          const connections = connectionsResponse.data.connections || [];
+          const stationboard = stationboardResponse.data.stationboard || [];
           
-          // Extract schedule times
-          const schedule = connections.slice(0, 4).map((conn: any) => {
-            const time = new Date(conn.from.departure);
-            return `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
-          }).join(', ') || '08:00, 10:00, 14:00, 18:00';
+          // Extract schedule times and full departure information
+          let schedule = '08:00, 10:00, 14:00, 18:00, 20:00, 22:00'; // Default fallback
+          let departures: Departure[] = [];
           
-          // Determine transport type
+          if (stationboard.length > 0) {
+            schedule = stationboard.map((departure: any) => {
+              const time = new Date(departure.stop.departure);
+              return `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+            }).join(', ');
+            
+            // Store full departure information
+            departures = stationboard.map((departure: any) => {
+              const time = new Date(departure.stop.departure);
+              return {
+                time: `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
+                destination: departure.to || 'Unknown',
+                category: departure.category || 'Train',
+                number: departure.number || '',
+                platform: departure.stop.platform || 'N/A',
+              };
+            });
+          }
+          
+          // Determine transport type from stationboard
           let transportType = 'Train';
-          if (connections[0]?.products) {
-            const products = connections[0].products;
-            if (products.includes('IR') || products.includes('IC') || products.includes('ICE')) {
-              transportType = 'Train';
-            } else if (products.includes('S')) {
+          if (stationboard.length > 0 && stationboard[0].category) {
+            const category = stationboard[0].category.toUpperCase();
+            
+            // Swiss train categories
+            if (category.includes('IC') || category.includes('IR') || category.includes('ICE') || category.includes('EC')) {
+              transportType = 'Express';
+            } else if (category === 'R' || category.includes('RE')) {
+              transportType = 'Regional';
+            } else if (category.startsWith('S')) {
               transportType = 'S-Bahn';
-            } else if (products.includes('Bus') || products.includes('BUS')) {
+            } else if (category.includes('BUS')) {
               transportType = 'Bus';
-            } else if (products.includes('T')) {
+            } else if (category.includes('T') || category.includes('TRAM')) {
               transportType = 'Tram';
+            } else if (category.includes('BAT') || category.includes('SHIP')) {
+              transportType = 'Boat';
+            } else {
+              transportType = category; // Use the actual category name for others
             }
           }
           
@@ -109,21 +166,41 @@ export const fetchDestinations = createAsyncThunk(
             `Central hub providing excellent connectivity across Switzerland.`,
           ];
           
+          // Format location
+          let location = 'Switzerland';
+          if (stationData.coordinate?.x && stationData.coordinate?.y) {
+            // Use icon coordinates for display (only show if available)
+            location = `${stationData.coordinate.y.toFixed(4)}°N, ${stationData.coordinate.x.toFixed(4)}°E`;
+          }
+          // Better approach: use station name or city
+          const cityMatch = station.match(/^([^,]+)/);
+          if (cityMatch) {
+            location = `${cityMatch[1]}, Switzerland`;
+          }
+          
           return {
             id: index + 1,
             name: stationData.name || station,
             description: descriptions[index % descriptions.length],
             image: swissStationImages[station] || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800&h=600&fit=crop',
-            location: `${stationData.coordinate?.x || ''}, ${stationData.coordinate?.y || ''}`.trim() || 'Switzerland',
+            location: location,
             status: 'Operating',
             rating: 4.0 + (Math.random() * 1),
             category: 'Transport',
             price: 15 + (index * 5),
             schedule: schedule,
             transportType: transportType,
+            departures: departures,
           };
         } catch (error) {
           // Fallback data if API call fails for this station
+          const fallbackDepartures: Departure[] = [
+            { time: '08:00', destination: 'Unknown', category: 'Train', number: '', platform: 'N/A' },
+            { time: '10:00', destination: 'Unknown', category: 'Train', number: '', platform: 'N/A' },
+            { time: '14:00', destination: 'Unknown', category: 'Train', number: '', platform: 'N/A' },
+            { time: '18:00', destination: 'Unknown', category: 'Train', number: '', platform: 'N/A' },
+          ];
+          
           return {
             id: index + 1,
             name: station,
@@ -136,6 +213,7 @@ export const fetchDestinations = createAsyncThunk(
             price: 15 + (index * 5),
             schedule: '08:00, 10:00, 14:00, 18:00',
             transportType: 'Train',
+            departures: fallbackDepartures,
           };
         }
       });
@@ -148,36 +226,91 @@ export const fetchDestinations = createAsyncThunk(
   }
 );
 
-// Fetch single destination by ID
+// Fetch single destination by ID with fresh real-time data from current time to end of day
 export const fetchDestinationById = createAsyncThunk(
   'destinations/fetchById',
   async (id: number, { rejectWithValue, getState }) => {
     try {
-      // Try to find in already loaded destinations first
+      // Find the station from already loaded destinations
       const state: any = getState();
       const existingDestination = state.destinations.destinations.find((d: Destination) => d.id === id);
       
-      if (existingDestination) {
+      if (!existingDestination) {
+        throw new Error('Destination not found');
+      }
+      
+      // Fetch fresh real-time departure data from current time to end of day
+      const now = new Date();
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+      
+      const stationboardResponse = await axios.get(
+        `https://transport.opendata.ch/v1/stationboard?station=${encodeURIComponent(existingDestination.name)}&limit=100`
+      );
+      const stationboard = stationboardResponse.data.stationboard || [];
+      
+      // Filter departures from current time to end of day
+      let departures: Departure[] = stationboard
+        .filter((departure: any) => {
+          if (!departure.stop || !departure.stop.departure) return false;
+          const departureTime = new Date(departure.stop.departure);
+          // Check if date is valid and is today and after current time
+          const isValidDate = !isNaN(departureTime.getTime());
+          const isSameDay = departureTime.toDateString() === now.toDateString();
+          const isAfterNow = departureTime.getTime() >= now.getTime();
+          return isValidDate && isSameDay && isAfterNow;
+        })
+        .map((departure: any) => {
+          const time = new Date(departure.stop.departure);
+          return {
+            time: `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
+            destination: departure.to || 'Unknown',
+            category: departure.category || 'Train',
+            number: departure.number || '',
+            platform: departure.stop.platform || 'N/A',
+          };
+        });
+      
+      // If no departures left today, use existing departures or show all available
+      if (departures.length === 0) {
+        if (existingDestination.departures && existingDestination.departures.length > 0) {
+          departures = existingDestination.departures;
+        } else if (stationboard.length > 0) {
+          // Show all available departures regardless of time
+          departures = stationboard.slice(0, 40).map((departure: any) => {
+            const time = new Date(departure.stop.departure);
+            return {
+              time: `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
+              destination: departure.to || 'Unknown',
+              category: departure.category || 'Train',
+              number: departure.number || '',
+              platform: departure.stop.platform || 'N/A',
+            };
+          });
+        }
+      }
+      
+      // Update schedule string with filtered times
+      const schedule = departures.length > 0
+        ? departures.map(d => d.time).join(', ')
+        : existingDestination.schedule;
+      
+      return {
+        ...existingDestination,
+        schedule,
+        departures,
+      };
+    } catch (error: any) {
+      // If fresh fetch fails, try to return existing destination with its departures
+      const state: any = getState();
+      const existingDestination = state.destinations.destinations.find((d: Destination) => d.id === id);
+      
+      if (existingDestination && existingDestination.departures) {
+        // Return the existing destination with whatever departures it has
         return existingDestination;
       }
       
-      // If not found, return a placeholder (since we're using static list)
-      const destination: Destination = {
-        id: id,
-        name: 'Swiss Station',
-        description: 'Major transport hub in Switzerland',
-        image: 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800&h=600&fit=crop',
-        location: 'Switzerland',
-        status: 'Operating',
-        rating: 4.5,
-        category: 'Transport',
-        price: 25,
-        schedule: '08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00, 22:00',
-        transportType: 'Train',
-      };
-      
-      return destination;
-    } catch (error: any) {
+      // Last resort: return error
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch destination');
     }
   }
