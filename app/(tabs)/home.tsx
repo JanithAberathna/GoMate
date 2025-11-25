@@ -33,13 +33,23 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchDestinations());
+    // Only fetch if destinations are empty
+    if (destinations.length === 0) {
+      dispatch(fetchDestinations(''));
+    }
   }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await dispatch(fetchDestinations());
+    await dispatch(fetchDestinations(searchQuery));
     setRefreshing(false);
+  };
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.length > 2 || query.length === 0) {
+      await dispatch(fetchDestinations(query));
+    }
   };
 
   const isFavorite = (id: number) => {
@@ -49,12 +59,6 @@ export default function HomeScreen() {
   const handleToggleFavorite = (destination: Destination) => {
     dispatch(toggleFavorite(destination));
   };
-
-  const filteredDestinations = destinations.filter((dest: Destination) =>
-    dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dest.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dest.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const renderDestinationCard = ({ item }: { item: Destination }) => (
     <TouchableOpacity
@@ -87,12 +91,6 @@ export default function HomeScreen() {
             <Text style={[styles.cardTitle, isDarkMode && styles.textDark]} numberOfLines={1}>
               {item.name}
             </Text>
-            {item.transportType && (
-              <View style={styles.transportBadge}>
-                <Feather name="navigation" size={10} color={SwissColors.swissRed} />
-                <Text style={styles.transportText}>{item.transportType}</Text>
-              </View>
-            )}
           </View>
         </View>
         
@@ -107,7 +105,7 @@ export default function HomeScreen() {
           <View style={styles.scheduleRow}>
             <Feather name="clock" size={14} color={isDarkMode ? '#888' : '#666'} />
             <Text style={[styles.scheduleText, isDarkMode && styles.textSecondaryDark]} numberOfLines={1}>
-              Next: {item.schedule.split(', ')[0]}
+              Next: {item.schedule.split(', ').slice(0, 3).join(', ')}...
             </Text>
           </View>
         )}
@@ -138,7 +136,7 @@ export default function HomeScreen() {
           <View style={styles.headerContent}>
             <View>
               <Text style={styles.greeting}>Hello, {user?.firstName || 'Traveler'}! 👋</Text>
-              <Text style={styles.subtitle}>Discover Swiss destinations</Text>
+              <Text style={styles.subtitle}>Discover Swiss Train destinations</Text>
             </View>
             <TouchableOpacity style={styles.notificationButton}>
               <Feather name="bell" size={22} color={isDarkMode ? '#fff' : SwissColors.neutralCharcoal} />
@@ -149,14 +147,23 @@ export default function HomeScreen() {
       </SafeAreaView>
 
       <View style={styles.searchWrapper}>
+        <TouchableOpacity 
+          style={styles.journeyPlanButton}
+          onPress={() => router.push('/journey/plan')}
+        >
+          <Feather name="navigation" size={20} color="#fff" />
+          <Text style={styles.journeyPlanText}>Plan Journey</Text>
+          <Feather name="arrow-right" size={16} color="#fff" />
+        </TouchableOpacity>
+
         <View style={styles.searchContainer}>
           <Feather name="search" size={20} color={SwissColors.swissRed} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search stations, routes..."
+            placeholder="Search Swiss stations..."
             placeholderTextColor={isDarkMode ? '#888' : '#999'}
             value={searchQuery}
-            onChangeText={setSearchQuery}
+            onChangeText={handleSearch}
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearButton}>
@@ -172,7 +179,7 @@ export default function HomeScreen() {
         </View>
       ) : (
         <FlatList
-          data={filteredDestinations}
+          data={destinations}
           renderItem={renderDestinationCard}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContent}
@@ -271,6 +278,28 @@ const getStyles = (isDarkMode: boolean) =>
       paddingHorizontal: SCREEN_WIDTH * 0.05,
       paddingVertical: SCREEN_HEIGHT * 0.02,
     },
+    journeyPlanButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: SwissColors.swissRed,
+      paddingHorizontal: SCREEN_WIDTH * 0.05,
+      paddingVertical: SCREEN_HEIGHT * 0.018,
+      borderRadius: 16,
+      marginBottom: SCREEN_HEIGHT * 0.015,
+      gap: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    journeyPlanText: {
+      color: '#fff',
+      fontSize: SCREEN_WIDTH * 0.042,
+      fontWeight: '700',
+      letterSpacing: -0.3,
+    },
     searchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -303,14 +332,15 @@ const getStyles = (isDarkMode: boolean) =>
     },
     card: {
       backgroundColor: isDarkMode ? '#1C1C1C' : '#fff',
-      borderRadius: 20,
-      marginBottom: SCREEN_HEIGHT * 0.022,
+      borderRadius: 24,
+      marginBottom: SCREEN_HEIGHT * 0.025,
       overflow: 'hidden',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: isDarkMode ? 0 : 0.12,
-      shadowRadius: 16,
-      elevation: 6,
+      shadowColor: SwissColors.swissRed,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: isDarkMode ? 0 : 0.15,
+      shadowRadius: 20,
+      elevation: 8,
+      borderWidth: isDarkMode ? 0 : 0,
     },
     cardDark: {
       backgroundColor: '#1C1C1C',
@@ -318,7 +348,7 @@ const getStyles = (isDarkMode: boolean) =>
     cardImageContainer: {
       position: 'relative',
       width: '100%',
-      height: SCREEN_HEIGHT * 0.26,
+      height: SCREEN_HEIGHT * 0.32,
     },
     cardImage: {
       width: '100%',
@@ -327,7 +357,7 @@ const getStyles = (isDarkMode: boolean) =>
     },
     imageOverlay: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.15)',
+      backgroundColor: 'rgba(0, 0, 0, 0.25)',
     },
     favoriteButton: {
       position: 'absolute',
@@ -355,10 +385,10 @@ const getStyles = (isDarkMode: boolean) =>
       fontWeight: 'normal',
     },
     cardContent: {
-      padding: SCREEN_WIDTH * 0.045,
+      padding: SCREEN_WIDTH * 0.05,
     },
     cardHeader: {
-      marginBottom: SCREEN_HEIGHT * 0.012,
+      marginBottom: SCREEN_HEIGHT * 0.014,
     },
     titleContainer: {
       flexDirection: 'row',
@@ -367,11 +397,11 @@ const getStyles = (isDarkMode: boolean) =>
       gap: 8,
     },
     cardTitle: {
-      fontSize: SCREEN_WIDTH * 0.048,
-      fontWeight: '700',
-      color: SwissColors.neutralCharcoal,
+      fontSize: SCREEN_WIDTH * 0.052,
+      fontWeight: '800',
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
       flex: 1,
-      letterSpacing: -0.3,
+      letterSpacing: -0.5,
     },
     transportBadge: {
       flexDirection: 'row',
@@ -391,30 +421,38 @@ const getStyles = (isDarkMode: boolean) =>
     locationRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: SCREEN_HEIGHT * 0.01,
+      marginBottom: SCREEN_HEIGHT * 0.012,
     },
     locationText: {
-      fontSize: SCREEN_WIDTH * 0.035,
-      color: SwissColors.textSecondary,
-      marginLeft: SCREEN_WIDTH * 0.01,
+      fontSize: SCREEN_WIDTH * 0.037,
+      color: isDarkMode ? '#999' : SwissColors.textSecondary,
+      marginLeft: SCREEN_WIDTH * 0.015,
       flex: 1,
+      fontWeight: '500',
     },
     scheduleRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: SCREEN_HEIGHT * 0.015,
+      marginBottom: SCREEN_HEIGHT * 0.016,
+      backgroundColor: isDarkMode ? '#2a2a2a' : SwissColors.swissWhite,
+      paddingVertical: SCREEN_HEIGHT * 0.01,
+      paddingHorizontal: SCREEN_WIDTH * 0.03,
+      borderRadius: 12,
     },
     scheduleText: {
-      fontSize: SCREEN_WIDTH * 0.033,
-      color: SwissColors.textSecondary,
-      marginLeft: SCREEN_WIDTH * 0.01,
-      fontWeight: '500',
+      fontSize: SCREEN_WIDTH * 0.035,
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
+      marginLeft: SCREEN_WIDTH * 0.015,
+      fontWeight: '600',
     },
     cardFooter: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginTop: SCREEN_HEIGHT * 0.006,
+      marginTop: SCREEN_HEIGHT * 0.01,
+      paddingTop: SCREEN_HEIGHT * 0.012,
+      borderTopWidth: 1,
+      borderTopColor: isDarkMode ? '#2a2a2a' : '#f0f0f0',
     },
     statusBadge: {
       flexDirection: 'row',
