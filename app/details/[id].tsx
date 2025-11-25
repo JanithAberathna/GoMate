@@ -19,6 +19,34 @@ import { SwissColors } from '@/constants/theme';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+// Helper function to get full train type name
+const getTrainTypeName = (category: string): string => {
+  const trainTypes: { [key: string]: string } = {
+    'IC': 'InterCity',
+    'IR': 'InterRegio',
+    'ICE': 'InterCity Express',
+    'EC': 'EuroCity',
+    'RE': 'Regional Express',
+    'R': 'Regional',
+    'S': 'S-Bahn (Suburban)',
+    'TGV': 'Train à Grande Vitesse',
+    'RJ': 'RailJet',
+    'EN': 'EuroNight',
+    'BUS': 'Bus',
+    'T': 'Tram',
+    'BAT': 'Boat',
+  };
+  
+  // Check if category starts with any known prefix
+  for (const [key, value] of Object.entries(trainTypes)) {
+    if (category.toUpperCase().startsWith(key)) {
+      return value;
+    }
+  }
+  
+  return category; // Return original if not found
+};
+
 export default function DestinationDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
@@ -82,12 +110,6 @@ export default function DestinationDetailsScreen() {
         <View style={styles.content}>
           <View style={styles.titleSection}>
             <Text style={styles.title}>{selectedDestination.name}</Text>
-            {selectedDestination.transportType && (
-              <View style={styles.transportBadge}>
-                <Feather name="navigation" size={16} color={SwissColors.swissRed} />
-                <Text style={styles.transportText}>{selectedDestination.transportType}</Text>
-              </View>
-            )}
           </View>
 
           <View style={styles.locationContainer}>
@@ -95,16 +117,34 @@ export default function DestinationDetailsScreen() {
             <Text style={styles.locationText}>{selectedDestination.location}</Text>
           </View>
 
-          {selectedDestination.schedule && (
+          {selectedDestination.departures && selectedDestination.departures.length > 0 && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Feather name="clock" size={20} color={SwissColors.swissRed} />
-                <Text style={styles.sectionTitle}>Schedule</Text>
+                <Text style={styles.sectionTitle}>Departures (Today)</Text>
               </View>
-              <View style={styles.scheduleGrid}>
-                {selectedDestination.schedule.split(', ').map((time: string, index: number) => (
-                  <View key={index} style={styles.scheduleItem}>
-                    <Text style={styles.scheduleTime}>{time}</Text>
+              <View style={styles.departuresContainer}>
+                {selectedDestination.departures.map((departure: any, index: number) => (
+                  <View key={index} style={styles.departureCard}>
+                    <View style={styles.departureRow}>
+                      <View style={styles.departureTimeSection}>
+                        <Text style={styles.departureTime}>{departure.time}</Text>
+                        <View style={styles.trainBadge}>
+                          <Text style={styles.trainCategory}>{departure.category} {departure.number}</Text>
+                        </View>
+                        <Text style={styles.trainTypeName}>{getTrainTypeName(departure.category)}</Text>
+                      </View>
+                      <View style={styles.departureInfoSection}>
+                        <View style={styles.destinationRow}>
+                          <Feather name="arrow-right" size={14} color={SwissColors.swissRed} />
+                          <Text style={styles.destinationText} numberOfLines={1}>{departure.destination}</Text>
+                        </View>
+                        <View style={styles.platformRow}>
+                          <Feather name="layers" size={12} color={isDarkMode ? '#888' : '#666'} />
+                          <Text style={styles.platformText}>Platform {departure.platform}</Text>
+                        </View>
+                      </View>
+                    </View>
                   </View>
                 ))}
               </View>
@@ -374,5 +414,79 @@ const getStyles = (isDarkMode: boolean) =>
       color: '#fff',
       fontSize: 16,
       fontWeight: '600',
+    },
+    departuresContainer: {
+      gap: 12,
+    },
+    departureCard: {
+      backgroundColor: isDarkMode ? '#1C1C1C' : SwissColors.swissWhite,
+      borderRadius: 16,
+      padding: 16,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDarkMode ? 0 : 0.08,
+      shadowRadius: 8,
+      elevation: 2,
+      borderWidth: 1,
+      borderColor: isDarkMode ? '#2a2a2a' : '#f0f0f0',
+    },
+    departureRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 16,
+    },
+    departureTimeSection: {
+      alignItems: 'flex-start',
+      minWidth: 80,
+    },
+    departureTime: {
+      fontSize: 22,
+      fontWeight: '700',
+      color: SwissColors.swissRed,
+      letterSpacing: -0.5,
+      marginBottom: 4,
+    },
+    trainBadge: {
+      backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 8,
+    },
+    trainCategory: {
+      fontSize: 11,
+      fontWeight: '600',
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
+    },
+    trainTypeName: {
+      fontSize: 10,
+      color: isDarkMode ? '#888' : '#666',
+      marginTop: 3,
+      fontWeight: '500',
+      fontStyle: 'italic',
+    },
+    departureInfoSection: {
+      flex: 1,
+      gap: 6,
+    },
+    destinationRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    destinationText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: isDarkMode ? '#fff' : SwissColors.neutralCharcoal,
+      flex: 1,
+    },
+    platformRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    platformText: {
+      fontSize: 13,
+      color: isDarkMode ? '#888' : '#666',
     },
   });
