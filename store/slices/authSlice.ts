@@ -25,24 +25,25 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async thunk for login - only accepts username: "user" and password: "user123"
+// Async thunk for login using DummyJSON API
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials: { username: string; password: string }, { rejectWithValue }) => {
     try {
-      // Check if credentials match the required values
-      if (credentials.username !== 'user' || credentials.password !== 'user123') {
-        return rejectWithValue('Invalid credentials. Use username: "user" and password: "user123"');
-      }
+      // Call DummyJSON authentication API
+      const response = await axios.post('https://dummyjson.com/auth/login', {
+        username: credentials.username,
+        password: credentials.password,
+      });
       
-      // Create user data for valid credentials
+      // Extract user data from response
       const userData = {
-        id: 1,
-        username: 'user',
-        email: 'user@gomate.com',
-        firstName: 'User',
-        lastName: 'GoMate',
-        token: 'gomate-token-' + Date.now(),
+        id: response.data.id,
+        username: response.data.username,
+        email: response.data.email,
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        token: response.data.accessToken,
       };
       
       // Store user data
@@ -51,7 +52,10 @@ export const loginUser = createAsyncThunk(
       
       return userData;
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Login failed');
+      if (error.response?.status === 400) {
+        return rejectWithValue('Invalid credentials. Try username: "emilys" and password: "emilyspass"');
+      }
+      return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
   }
 );
